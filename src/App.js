@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import { AdviceCard, Button } from "./components";
+import { getAdvice } from "./services/adviceService";
 
-function App() {
+const App = () => {
+  const [advice, setAdvice] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const advice = await getAdvice();
+      setAdvice(advice);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <AdviceCard advice={advice} loading={loading} />
+      <Button onClick={getData} />
     </div>
   );
-}
+};
 
 export default App;
